@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>异步数据加载</title>
+		<script src="../js/echarts.js"></script>
+		<script src="../js/jquery.min.js"></script>
+	</head>
+	<body>
+		<h2>异步数据加载</h2>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="width: 400px;height:200px;"></div>
+		<h2>异步数据加载</h2>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main2" style="width: 400px;height:200px;"></div>
+		
+		
+		<script type="text/javascript">
+			// 基于准备好的dom，初始化echarts实例
+			var myChart = echarts.init(document.getElementById('main'),'dark');
+			
+			$.get('data2.json').done(function (data) {
+				console.log(data);
+			    myChart.setOption({
+			        title: {
+			            text: '异步数据加载示例'
+			        },
+			        tooltip: {},
+			        legend: {
+			            data:['销量']
+			        },
+			        xAxis: {
+			            data:["裤子","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+			        },
+			        yAxis: {},
+			        series: [{
+			            name: '销量',
+			            type: 'bar',
+			            data:data
+			        }]
+			    });
+			});
+			
+			var myChart2 = echarts.init(document.getElementById('main2'),'light');
+			
+			$.get('data3.json').done(function (data) {
+				
+				console.log(data);
+				//ajax返回数据处理,得到有name和value字段的数据
+				var showList = [];
+				for(var i  = 0 ; i < data.length; i++){
+					var item = {
+						name : data[i].name1,
+						value: data[i].value1
+					}
+					showList.push(item);
+				}
+				//模拟网络延时
+				//先显示加载动画
+				myChart2.showLoading();
+				window.setTimeout(function(){
+					//关闭加载动画
+					myChart2.hideLoading();
+					myChart2.setOption({
+					    title: {
+					        text: '异步数据加载示例'
+					    },
+					    tooltip: {},
+					    legend: {
+					        data:['销量']
+					    },
+					    xAxis: {
+					        data:["裤子","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+					    },
+					    yAxis: {},
+					    series: [{
+					        name: '销量',
+					        type: 'bar',
+					        data:showList
+					    }]
+					});
+				
+				},2000);
+				
+			   
+			});
+
+		
+		</script>
+	</body>
+</html>

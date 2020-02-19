@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>坐标系</title>
+		<script src="../js/echarts.js"></script>
+	</head>
+	<body>
+		<h2>两个yAxis，共用一个xAxis</h2>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="width: 600px;height:400px;"></div>
+
+		<script type="text/javascript">
+			// 基于准备好的dom，初始化echarts实例
+			var myChart = echarts.init(document.getElementById('main'));
+
+			// 指定图表的配置项和数据
+			var option = {
+				xAxis:{
+					data:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+				},
+				yAxis:[
+					{
+						// axisLabel:{color:'blue'},
+						axisLine:{lineStyle:{color:'blue'}},
+						// axisTick:{lineStyle:{color:'blue'}},
+						splitLine:{show: false},
+					},
+					{
+						// axisLabel:{color:'red'},
+						axisLine:{lineStyle:{color:'red'}},
+						// axisTick:{lineStyle:{color:'red'}},
+						splitLine:{show: false},
+					},
+					],
+				series:[
+					{
+						type:'bar',
+						data:[20,15,15,30,55,85,17],
+						yAxisIndex:0,
+						color:'blue'
+					},
+					{
+						type:'line',
+						data:[210,115,250,530,305,515,677],
+						yAxisIndex:1,
+						color:'red',
+						lineStyle:{width:5},
+						symbolSize:[8,8]
+					}
+				]
+				
+			};
+
+			// 使用刚指定的配置项和数据显示图表。
+			myChart.setOption(option);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>维度（dimension）</title>
+		<script src="../js/echarts.js"></script>
+	</head>
+	<body>
+		<h2>维度（dimension）</h2>
+		<h3>
+			把系列（series）对应到“列”的时候，那么每一列就称为一个“维度（dimension）”，而每一行称为数据项（item）。
+			反之，如果我们把系列（series）对应到表行，那么每一行就是“维度（dimension）”，每一列就是数据项（item）。
+			维度可以有单独的名字，便于在图表中显示。维度名（dimension name）可以在定义在 dataset 的第一行（或者第一列）。
+			例如上面的例子中，'score'、'amount'、'product' 就是维度名。
+			从第二行开始，才是正式的数据。dataset.source 中第一行（列）到底包含不包含维度名，ECharts 默认会自动探测。
+			当然也可以设置 dataset.sourceHeader: true 显示声明第一行（列）就是维度，或者 dataset.sourceHeader: false 表明第一行（列）开始就直接是数据。
+			维度的定义，也可以使用单独的 dataset.dimensions 或者 series.dimensions 来定义，这样可以同时指定维度名，和维度的类型（dimension type）
+		</h3>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="width: 1200px;height:400px;"></div>
+
+		<script type="text/javascript">
+			// 基于准备好的dom，初始化echarts实例
+			var myChart = echarts.init(document.getElementById('main'));
+			//不使用dataset的情况
+			// 指定图表的配置项和数据
+			var option = {
+				dataset: {
+					source: [
+						['score', 'amount', 'product'],
+						[89.3, 58212, 'Matcha Latte'],
+						[57.1, 78254, 'Milk Tea'],
+						[74.4, 41032, 'Cheese Cocoa'],
+						[50.1, 12755, 'Cheese Brownie'],
+						[89.7, 20145, 'Matcha Cocoa'],
+						[68.1, 79146, 'Tea'],
+						[19.6, 91852, 'Orange Juice'],
+						[10.6, 101852, 'Lemon Juice'],
+						[32.7, 20112, 'Walnut Brownie']
+					]
+				},
+				xAxis: {
+					// type:'category'
+				},
+				yAxis: {
+					type: 'category'
+				},
+				series: [{
+					type: 'bar',
+					encode: {
+						// 将 "amount" 列映射到 X 轴。
+						x: 'amount',
+						// y: 'amount',
+						// 将 "product" 列映射到 Y 轴。
+						y: 'product'
+						// x: 'product'
+					}
+				}]
+			}
+
+			// 使用刚指定的配置项和数据显示图表。
+			myChart.setOption(option);
+
+
+			// var option1 = {
+			//     dataset: {
+			//         dimensions: [
+			//             {name: 'score'},
+			//             // 可以简写为 string，表示维度名。
+			//             'amount',
+			//             // 可以在 type 中指定维度类型。
+			//             {name: 'product', type: 'ordinal'}
+			//         ],
+			//         source: [...]
+			//     },
+			//     ...
+			// };
+
+			// var option2 = {
+			//     dataset: {
+			//         source: [...]
+			//     },
+			//     series: {
+			//         type: 'line',
+			//         // 在系列中设置的 dimensions 会更优先采纳。
+			//         dimensions: [
+			//             null, // 可以设置为 null 表示不想设置维度名
+			//             'amount',
+			//             {name: 'product', type: 'ordinal'}
+			//         ]
+			//     },
+			//     ...
+			// };
+
+			// 大多数情况下，我们并不需要去设置维度类型，因为会自动判断。但是如果因为数据为空之类原因导致判断不足够准确时，可以手动设置维度类型。
+			// 维度类型（dimension type）可以取这些值：
+			// 'number': 默认，表示普通数据。
+			// 'ordinal': 对于类目、文本这些 string 类型的数据，如果需要能在数轴上使用，须是 'ordinal' 类型。ECharts 默认会自动判断这个类型。但是自动判断也是不可能很完备的，所以使用者也可以手动强制指定。
+			// 'time': 表示时间数据。设置成 'time' 则能支持自动解析数据成时间戳（timestamp），比如该维度的数据是 '2017-05-10'，会自动被解析。如果这个维度被用在时间数轴（axis.type 为 'time'）上，那么会被自动设置为 'time' 类型。时间类型的支持参见 data。
+			// 'float': 如果设置成 'float'，在存储时候会使用 TypedArray，对性能优化有好处。
+			// 'int': 如果设置成 'int'，在存储时候会使用 TypedArray，对性能优化有好处。
+		</script>
+	</body>
+</html>

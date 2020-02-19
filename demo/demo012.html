@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>动态数据变化-案例-人数变化-小时-分钟</title>
+		<script src="../js/echarts.js"></script>
+		<script src="../js/jquery.min.js"></script>
+	</head>
+	<body>
+		<h2>动态数据变化-案例-数据随秒变化</h2>
+		<button onclick="showGrid()">new</button>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="width: 800px;height:350px;"></div>
+		 
+		
+		<script type="text/javascript">
+			
+			
+			//将1位长度的数据转换为2位,比如 9 转换为 09
+			function toTwo(s){
+				s = s + "";
+				if(s.length == 1){
+					return "0" + s;
+				}else{
+					return s;
+				}
+			}
+			
+			
+			
+			//返回当前的年月日
+			function getNewDate(){
+				var currentTime = new Date();
+				//年月日
+				var year = currentTime.getFullYear();
+				var month = currentTime.getMonth() + 1;    // 0 -- 11
+				var date = currentTime.getDate();
+				//当前的年月日
+				var currentDate = year + "-" + toTwo(month) + "-" + toTwo(date);
+				return currentDate;
+			}
+			//返回当前的时分秒
+			function getNewTime(){
+				var currentTime = new Date();
+				//时分秒
+				var hour = currentTime.getHours();
+				var minute = currentTime.getMinutes();
+				var second = currentTime.getSeconds(); 
+				//当前的时分秒
+				var currentTime =  toTwo(hour) + ":" + toTwo(minute) + ":" + toTwo(second);
+				return currentTime;
+			}
+			
+			function random(min, max) {
+			  return Math.floor(Math.random() * (max - min)) + min;
+			}
+
+			//返回一个指定范围的随机数,包含开始,不包含介绍.是否有更容易的原生js方法？
+			function getNewData(){
+				return random(80,100);
+			}
+			var dataList = [];
+			var timeList = [];
+			
+			function addNew(){
+				//获取到新日期和新时间数据
+				var newDate = getNewDate();
+				var newTime = getNewTime();
+				//获取到新数据 80 ---100
+				var newData = getNewData();
+				if(timeList.length < 10){
+					timeList.push(newTime);
+				}else{
+					timeList.shift();
+					timeList.push(newTime);
+				}
+				if(dataList.length < 10){
+					dataList.push(newData);
+				}else{
+					dataList.shift();
+					dataList.push(newData);
+				}
+				
+				console.log(timeList);
+				console.log(dataList);
+				
+				
+				option = {
+				    xAxis: {
+				        type: 'category',
+				        boundaryGap: false,
+				        data: timeList,
+						//'12:30','12:30','12:30','12:30','12:30','12:30'
+				    },
+				    yAxis: {
+				        // boundaryGap: [0, '50%'],
+				        // type: 'value'
+				    },
+				    series: [
+				        {
+				            name:'成交',
+				            type:'line',
+				            smooth:true,
+				            // symbol: 'none',
+				            // stack: 'a',
+				            areaStyle: {
+				                normal: {}
+				            },
+				            data: dataList
+							//34,18,34,10,88,90
+				        }
+				    ]
+				};
+				myChart.setOption(option);
+				
+			}
+			
+			
+			setInterval(function(){
+				addNew();
+			},1000)
+			
+			
+			// 基于准备好的dom，初始化echarts实例
+			var myChart = echarts.init(document.getElementById('main'),'dark');
+		 
+			
+			//每1秒钟,生成一组新的数据来更新
+			//更新规则:随机产生0-100之间的整数,放入队列尾,队首元素出队列
+			
+			option = {
+			    xAxis: {
+			        type: 'category',
+			        boundaryGap: false,
+			        data: timeList,
+					//'12:30','12:30','12:30','12:30','12:30','12:30'
+			    },
+			    yAxis: {
+			        // boundaryGap: [0, '50%'],
+			        // type: 'value'
+			    },
+			    series: [
+			        {
+			            name:'成交',
+			            type:'line',
+			            smooth:true,
+			            // symbol: 'none',
+			            // stack: 'a',
+			            areaStyle: {
+			                normal: {}
+			            },
+			            data: dataList
+						//34,18,34,10,88,90
+			        }
+			    ]
+			};
+			
+			myChart.setOption(option);
+			  
+		
+		</script>
+	</body>
+</html>
